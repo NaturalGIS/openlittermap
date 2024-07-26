@@ -24,6 +24,7 @@ from qgis.PyQt.QtCore import QCoreApplication
 
 from qgis.core import QgsProcessingProvider
 
+from openlittermap.algs.download_points import DownloadPoints
 from openlittermap.utils import PLUGIN_ROOT
 
 
@@ -52,7 +53,7 @@ class OpenLitterMapProvider(QgsProcessingProvider):
         pass
 
     def loadAlgorithms(self):
-        self.algs = []
+        self.algs = [DownloadPoints()]
         for a in self.algs:
             self.addAlgorithm(a)
 

@@ -7,7 +7,7 @@ version=1.0.0
 qgisMinimumVersion=3.34
 
 icon=icons/openlittermap.svg
-tags=analysis,processing
+tags=analysis,processing,openlittermap,points
 
 author=NaturalGIS
 email=info@naturalgis.pt

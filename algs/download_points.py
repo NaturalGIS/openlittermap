@@ -20,7 +20,7 @@
 import json
 from datetime import datetime
 
-from qgis.PyQt.QtCore import QMetaType, QUrl, QDateTime
+from qgis.PyQt.QtCore import QVariant, QUrl, QDateTime
 from qgis.PyQt.QtNetwork import QNetworkRequest, QNetworkReply
 
 from qgis.core import (
@@ -65,7 +65,7 @@ class DownloadPoints(OpenLitterMapAlgorithm):
             QgsProcessingParameterNumber(
                 self.YEAR,
                 self.tr("Year"),
-                Qgis.ProcessingNumberParameterType.Integer,
+                QgsProcessingParameterNumber.Integer,
                 2024,
                 minValue=2017,
             )
@@ -121,9 +121,9 @@ class DownloadPoints(OpenLitterMapAlgorithm):
             feedback.reportError(self.tr("Server reply is not a valid JSON"), True)
 
         fields = QgsFields()
-        fields.append(QgsField("descr", QMetaType.QString))
-        fields.append(QgsField("photo", QMetaType.QString))
-        fields.append(QgsField("date", QMetaType.QDateTime))
+        fields.append(QgsField("descr", QVariant.String))
+        fields.append(QgsField("photo", QVariant.String))
+        fields.append(QgsField("date", QVariant.DateTime))
 
         (sink, dest_id) = self.parameterAsSink(
             parameters, self.OUTPUT, context, fields, Qgis.WkbType.Point, crs_wgs84

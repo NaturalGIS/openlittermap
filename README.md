@@ -1,3 +1,3 @@
 # OpenLitterMap
 
-QGIS plugin to work with [OpenLitterMap](https://openlittermap.com/) data.
+QGIS Processing provider to download raw data from the [OpenLitterMap](https://openlittermap.com/) project.

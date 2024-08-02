@@ -1,7 +1,7 @@
 [general]
 name=OpenLitterMap
-description=
-about=
+description=Processing provider to download raw data from the OpenLitterMap (https://openlittermap.com) project.
+about=Processing provider to download raw data from the OpenLitterMap (https://openlittermap.com) project. The data will be downloaded using OLM API and added to a QGIS project as a point vector layer.
 category=Plugins
 version=1.0.0
 qgisMinimumVersion=3.34
@@ -12,9 +12,9 @@ tags=analysis,processing,openlittermap,points
 author=NaturalGIS
 email=info@naturalgis.pt
 
-homepage=
-tracker=
-repository=
+homepage=https://github.com/NaturalGIS/openlittermap
+tracker=https://github.com/NaturalGIS/openlittermap/issues
+repository=https://github.com/NaturalGIS/openlittermap
 
 hasProcessingProvider=yes
 

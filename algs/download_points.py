@@ -18,7 +18,6 @@
 """
 
 import json
-from datetime import datetime
 
 from qgis.PyQt.QtCore import QVariant, QUrl, QDateTime
 from qgis.PyQt.QtNetwork import QNetworkRequest, QNetworkReply
@@ -81,7 +80,7 @@ class DownloadPoints(OpenLitterMapAlgorithm):
         extent = self.parameterAsExtent(parameters, self.EXTENT, context, crs_wgs84)
 
         year = self.parameterAsInt(parameters, self.YEAR, context)
-        current_year = datetime.now().year
+        current_year = QDateTime.currentDateTime().date().year()
         if year > current_year:
             raise QgsProcessingException(
                 self.tr("Input year could not be greater than current year.")

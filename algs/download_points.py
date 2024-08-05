@@ -122,9 +122,13 @@ class DownloadPoints(OpenLitterMapAlgorithm):
             feedback.reportError(self.tr("Server reply is not a valid JSON"), True)
 
         fields = QgsFields()
-        fields.append(QgsField("descr", QVariant.String))
+        fields.append(QgsField("description", QVariant.String))
         fields.append(QgsField("photo", QVariant.String))
         fields.append(QgsField("date", QVariant.DateTime))
+        fields.append(QgsField("verified", QVariant.Bool))
+        fields.append(QgsField("picked_up", QVariant.Bool))
+        fields.append(QgsField("username", QVariant.String))
+        fields.append(QgsField("team", QVariant.String))
 
         (sink, dest_id) = self.parameterAsSink(
             parameters, self.OUTPUT, context, fields, Qgis.WkbType.Point, crs_wgs84
@@ -142,9 +146,13 @@ class DownloadPoints(OpenLitterMapAlgorithm):
 
             f = QgsFeature()
             f.setFields(fields)
-            f["descr"] = attrs["result_string"]
+            f["description"] = attrs["result_string"]
             f["photo"] = attrs["filename"]
             f["date"] = QDateTime.fromString(attrs["datetime"], "yyyy-MM-dd HH:mm:ss")
+            f["verified"] = attrs["verified"]
+            f["picked_up"] = attrs["picked_up"]
+            f["username"] = attrs["username"]
+            f["team"] = attrs["team"]
 
             coords = point["geometry"]["coordinates"]
             g = QgsGeometry.fromPointXY(QgsPointXY(coords[1], coords[0]))

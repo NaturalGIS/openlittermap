@@ -33,13 +33,13 @@ from qgis.core import (
     QgsCoordinateReferenceSystem,
     QgsBlockingNetworkRequest,
     QgsProcessingException,
+    QgsProcessingMultiStepFeedback,
     QgsProcessingParameterExtent,
     QgsProcessingParameterNumber,
     QgsProcessingParameterFeatureSink,
 )
 
 from openlittermap.algorithm import OpenLitterMapAlgorithm
-
 
 class DownloadPoints(OpenLitterMapAlgorithm):
 
@@ -74,7 +74,7 @@ class DownloadPoints(OpenLitterMapAlgorithm):
         )
 
     def processAlgorithm(self, parameters, context, feedback):
-        self.feedback = feedback
+        self.multistep_feedback = QgsProcessingMultiStepFeedback(2, feedback)
 
         crs_wgs84 = QgsCoordinateReferenceSystem("EPSG:4326")
         extent = self.parameterAsExtent(parameters, self.EXTENT, context, crs_wgs84)
@@ -112,6 +112,8 @@ class DownloadPoints(OpenLitterMapAlgorithm):
         if reply.error() != QNetworkReply.NoError:
             feedback.reportError(reply.errorString(), True)
 
+        self.multistep_feedback.setCurrentStep(1)
+
         feedback.pushInfo(self.tr("Parsing data…"))
         content = reply.content().data().decode()
         try:
@@ -130,7 +132,9 @@ class DownloadPoints(OpenLitterMapAlgorithm):
         if sink is None:
             raise QgsProcessingException(self.invalidSinkError(parameters, self.OUTPUT))
 
-        for point in data["features"]:
+        total = len(data["features"])
+        step = 100 / total if total > 0 else 0
+        for i, point in enumerate(data["features"]):
             if feedback.isCanceled():
                 break
 
@@ -147,11 +151,12 @@ class DownloadPoints(OpenLitterMapAlgorithm):
             f.setGeometry(g)
 
             sink.addFeature(f, QgsFeatureSink.Flag.FastInsert)
+            self.multistep_feedback.setProgress(i * step)
 
         return {self.OUTPUT: dest_id}
 
     def download_progress(self, bytes_received: int, bytes_total: int):
-        if not self.feedback.isCanceled() and bytes_total > 0:
+        if not self.multistep_feedback.isCanceled() and bytes_total > 0:
             progress = (bytes_received * 100) / bytes_total
             if progress < 100:
-                self.feedback.setProgress(progress)
+                self.multistep_feedback.setProgress(progress)

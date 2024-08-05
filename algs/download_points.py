@@ -40,6 +40,8 @@ from qgis.core import (
 )
 
 from openlittermap.algorithm import OpenLitterMapAlgorithm
+from openlittermap.postprocessor import SetStylePostprocessor
+
 
 class DownloadPoints(OpenLitterMapAlgorithm):
 
@@ -160,6 +162,11 @@ class DownloadPoints(OpenLitterMapAlgorithm):
 
             sink.addFeature(f, QgsFeatureSink.Flag.FastInsert)
             self.multistep_feedback.setProgress(i * step)
+
+        if context.willLoadLayerOnCompletion(dest_id):
+            context.layerToLoadOnCompletionDetails(dest_id).setPostProcessor(
+                SetStylePostprocessor.create()
+            )
 
         return {self.OUTPUT: dest_id}
 
